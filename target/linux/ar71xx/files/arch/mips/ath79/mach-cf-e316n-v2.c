@@ -136,6 +136,47 @@ static struct gpio_keys_button cf_e320n_v2_gpio_keys[] __initdata = {
 	},
 };
 
+/* CF-E325N */
+#define CF_E325N_GPIO_LED_WLAN		0
+#define CF_E325N_GPIO_LED_WAN		2
+#define CF_E325N_GPIO_LED_LAN		3
+
+#define CF_E325N_GPIO_HEADER_J9_1	14
+#define CF_E325N_GPIO_HEADER_J9_2	12
+#define CF_E325N_GPIO_HEADER_J9_3	11
+#define CF_E325N_GPIO_HEADER_J9_4	16
+
+#define CF_E325N_GPIO_EXT_WDT		16
+
+#define CF_E325N_GPIO_BTN_RESET		20
+
+static struct gpio_led cf_e325n_leds_gpio[] __initdata = {
+	{
+		.name		= "cf-e325n:green:lan",
+		.gpio		= CF_E325N_GPIO_LED_LAN,
+		.active_low	= 0,
+	}, {
+		.name		= "cf-e325n:red:wan",
+		.gpio		= CF_E325N_GPIO_LED_WAN,
+		.active_low	= 0,
+	}, {
+		.name		= "cf-e325n:blue:wlan",
+		.gpio		= CF_E325N_GPIO_LED_WLAN,
+		.active_low	= 0,
+	},
+};
+
+static struct gpio_keys_button cf_e325n_gpio_keys[] __initdata = {
+	{
+		.desc		= "Reset button",
+		.type		= EV_KEY,
+		.code		= KEY_RESTART,
+		.debounce_interval = CF_EXXXN_KEYS_DEBOUNCE_INTERVAL,
+		.gpio		= CF_E325N_GPIO_BTN_RESET,
+		.active_low	= 1,
+	},
+};
+
 /* CF-E355AC v1/v2 */
 #define CF_E355AC_GPIO_LED_LAN		3
 #define CF_E355AC_GPIO_LED_WLAN2G	0
