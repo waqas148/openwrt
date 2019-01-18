@@ -245,6 +245,14 @@ cf-e385ac)
 		;;
 	esac
 	;;
+cf-e5)
+	ucidef_set_led_netdev "lan" "LAN" "$board:blue:lan" "eth0"
+	ucidef_set_led_netdev "wan" "WAN" "$board:blue:wan" "eth1"
+	ucidef_set_led_wlan "wlan" "WLAN" "$board:blue:wlan" "phy0tpt"
+	ucidef_set_led_rssi "signal1" "SIGNAL1" "$board:blue:signal1" "wlan0" "1" "100"
+	ucidef_set_led_rssi "signal2" "SIGNAL2" "$board:blue:signal2" "wlan0" "33" "100"
+	ucidef_set_led_rssi "signal3" "SIGNAL3" "$board:blue:signal3" "wlan0" "66" "100"
+	;;
 cf-e520n|\
 cf-e530n)
 	ucidef_set_led_netdev "wan" "WAN" "$board:blue:wan" "eth1"

@@ -242,6 +242,16 @@ define Device/cf-e385ac
 endef
 TARGET_DEVICES += cf-e385ac
 
+define Device/cf-e5
+  DEVICE_TITLE := COMFAST CF-E5/CF-E7
+  DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-usb-net kmod-usb-net-qmi-wwan \
+	-swconfig -uboot-envtools
+  BOARDNAME := CF-E5
+  IMAGE_SIZE := 16192k
+  MTDPARTS := spi0.0:64k(u-boot)ro,64k(art)ro,16192k(firmware),64k(art-backup)ro
+endef
+TARGET_DEVICES += cf-e5
+
 define Device/cf-e520n
   DEVICE_TITLE := COMFAST CF-E520N
   DEVICE_PACKAGES := kmod-usb-core kmod-usb2 -swconfig -uboot-envtools

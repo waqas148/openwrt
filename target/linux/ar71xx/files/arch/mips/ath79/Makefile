@@ -83,6 +83,7 @@ obj-$(CONFIG_ATH79_MACH_CF_E355AC)		+= mach-cf-e316n-v2.o
 obj-$(CONFIG_ATH79_MACH_CF_E375AC)		+= mach-cf-e316n-v2.o
 obj-$(CONFIG_ATH79_MACH_CF_E380AC_V1)		+= mach-cf-e316n-v2.o
 obj-$(CONFIG_ATH79_MACH_CF_E380AC_V2)		+= mach-cf-e316n-v2.o
+obj-$(CONFIG_ATH79_MACH_CF_E5)			+= mach-cf-e316n-v2.o
 obj-$(CONFIG_ATH79_MACH_CF_E520N)		+= mach-cf-e316n-v2.o
 obj-$(CONFIG_ATH79_MACH_CF_E530N)		+= mach-cf-e316n-v2.o
 obj-$(CONFIG_ATH79_MACH_CPE505N)		+= mach-r602n.o

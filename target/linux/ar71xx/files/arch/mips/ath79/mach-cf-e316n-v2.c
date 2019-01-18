@@ -7,6 +7,7 @@
  *  - CF-E375AC (QCA9563 + QCA9886 + QCA8337)
  *  - CF-E380AC v1/v2 (QCA9558)
  *  - CF-E385AC (QCA9558 + QCA9984 + QCA8337)
+ *  - CF-E5/CF-E7 (QCA9531 + EC20)
  *  - CF-E520N/CF-E530N (QCA9531)
  *
  *  Copyright (C) 2016 Piotr Dymacz <pepe2k@gmail.com>
@@ -326,6 +327,55 @@ static struct mdio_board_info cf_e380ac_v1v2_mdio0_info[] = {
 		.mdio_addr = 0,
 		.platform_data = &cf_e380ac_v1v2_at803x_data,
 	},
+};
+
+/* CF-E5/CF-E7 */
+#define CF_E5_GPIO_LED_WAN		4
+#define CF_E5_GPIO_LED_LAN		16
+#define CF_E5_GPIO_LED_WLAN		0
+
+#define CF_E5_GPIO_LED_SIGNAL1		2
+#define CF_E5_GPIO_LED_SIGNAL2		3
+#define CF_E5_GPIO_LED_SIGNAL3		15
+
+#define CF_E5_GPIO_BTN_RESET		17
+
+#define CF_E5_GPIO_LTE_POWER		14
+#define CF_E5_GPIO_LTE_WAKUP		11
+#define CF_E5_GPIO_LTE_POWEROFF		1
+#define CF_E5_GPIO_LTE_RST		12
+
+static struct gpio_led cf_e5_leds_gpio[] __initdata = {
+	{
+		.name		= "cf-e5:blue:wan",
+		.gpio		= CF_E5_GPIO_LED_WAN,
+		.active_low	= 1,
+	},
+	{
+		.name		= "cf-e5:blue:lan",
+		.gpio		= CF_E5_GPIO_LED_LAN,
+		.active_low	= 1,
+	},
+	{
+		.name		= "cf-e5:blue:wlan",
+		.gpio		= CF_E5_GPIO_LED_WLAN,
+		.active_low	= 1,
+	},
+	{
+		.name		= "cf-e5:blue:signal1",
+		.gpio		= CF_E5_GPIO_LED_SIGNAL1,
+		.active_low	= 1,
+	},
+	{
+		.name		= "cf-e5:blue:signal2",
+		.gpio		= CF_E5_GPIO_LED_SIGNAL2,
+		.active_low	= 1,
+	},
+	{
+		.name		= "cf-e5:blue:signal3",
+		.gpio		= CF_E5_GPIO_LED_SIGNAL3,
+		.active_low	= 1,
+	}
 };
 
 /* CF-E520N/CF-E530N */
@@ -722,6 +772,50 @@ static void __init cf_e385ac_setup(void)
 
 MIPS_MACHINE(ATH79_MACH_CF_E385AC, "CF-E385AC", "COMFAST CF-E385AC",
 	     cf_e385ac_setup);
+
+static void __init cf_e5_setup(void)
+{
+	cf_exxxn_common_setup(0x10000, -1);
+
+	cf_exxxn_qca953x_eth_setup();
+
+	ath79_gpio_direction_select(CF_E5_GPIO_LED_WAN, true);
+	ath79_gpio_direction_select(CF_E5_GPIO_LED_LAN, true);
+	ath79_gpio_direction_select(CF_E5_GPIO_LED_WLAN, true);
+	ath79_gpio_direction_select(CF_E5_GPIO_LED_SIGNAL1, true);
+	ath79_gpio_direction_select(CF_E5_GPIO_LED_SIGNAL2, true);
+	ath79_gpio_direction_select(CF_E5_GPIO_LED_SIGNAL3, true);
+
+	ath79_gpio_output_select(CF_E5_GPIO_LED_WAN, 0);
+	ath79_gpio_output_select(CF_E5_GPIO_LED_LAN, 0);
+	ath79_gpio_output_select(CF_E5_GPIO_LED_WLAN, 0);
+	ath79_gpio_output_select(CF_E5_GPIO_LED_SIGNAL1, 0);
+	ath79_gpio_output_select(CF_E5_GPIO_LED_SIGNAL2, 0);
+	ath79_gpio_output_select(CF_E5_GPIO_LED_SIGNAL3, 0);
+
+	ath79_register_gpio_keys_polled(-1, CF_EXXXN_KEYS_POLL_INTERVAL,
+					ARRAY_SIZE(cf_e320n_v2_gpio_keys),
+					cf_e320n_v2_gpio_keys);
+
+	ath79_register_leds_gpio(-1, ARRAY_SIZE(cf_e5_leds_gpio),
+				 cf_e5_leds_gpio);
+
+	gpio_request_one(CF_E5_GPIO_LTE_POWER,
+				GPIOF_OUT_INIT_HIGH | GPIOF_EXPORT_DIR_FIXED,
+				"LTE Power");
+	gpio_request_one(CF_E5_GPIO_LTE_WAKUP,
+				GPIOF_OUT_INIT_HIGH | GPIOF_EXPORT_DIR_FIXED,
+				"LTE Wakeup");
+	gpio_request_one(CF_E5_GPIO_LTE_POWEROFF,
+				GPIOF_OUT_INIT_HIGH | GPIOF_EXPORT_DIR_FIXED,
+				"LTE Poweroff");
+	gpio_request_one(CF_E5_GPIO_LTE_RST,
+				GPIOF_OUT_INIT_HIGH | GPIOF_EXPORT_DIR_FIXED,
+				"LTE Reset");
+}
+
+MIPS_MACHINE(ATH79_MACH_CF_E5, "CF-E5", "COMFAST CF-E5/CF-E7",
+	     cf_e5_setup);
 
 static void __init cf_e5x0n_gpio_setup(void)
 {

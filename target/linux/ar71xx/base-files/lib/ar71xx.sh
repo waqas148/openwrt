@@ -572,6 +572,9 @@ ar71xx_board_detect() {
 	*"CF-E385AC")
 		name="cf-e385ac"
 		;;
+	*"CF-E5")
+		name="cf-e5"
+		;;
 	*"CF-E520N")
 		name="cf-e520n"
 		;;

@@ -2359,6 +2359,16 @@ config ATH79_MACH_CF_E380AC_V2
 	select ATH79_DEV_USB
 	select ATH79_DEV_WMAC
 
+config ATH79_MACH_CF_E5
+	bool "COMFAST CF-E5/CF-E7 support"
+	select SOC_QCA953X
+	select ATH79_DEV_ETH
+	select ATH79_DEV_GPIO_BUTTONS
+	select ATH79_DEV_LEDS_GPIO
+	select ATH79_DEV_M25P80
+	select ATH79_DEV_USB
+	select ATH79_DEV_WMAC
+
 config ATH79_MACH_CF_E520N
 	bool "COMFAST CF-E520N support"
 	select SOC_QCA953X
