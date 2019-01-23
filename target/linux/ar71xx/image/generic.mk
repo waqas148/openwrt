@@ -258,6 +258,24 @@ define Device/cf-e530n
 endef
 TARGET_DEVICES += cf-e530n
 
+define Device/cf-ew71
+  DEVICE_TITLE := COMFAST CF-EW71
+  DEVICE_PACKAGES := kmod-usb-core kmod-usb2 -swconfig -uboot-envtools
+  BOARDNAME := CF-EW71
+  IMAGE_SIZE := 16192k
+  MTDPARTS := spi0.0:64k(u-boot)ro,64k(art)ro,16192k(firmware),64k(art-backup)ro
+endef
+TARGET_DEVICES += cf-ew71
+
+define Device/cf-ew72
+  $(Device/cf-ew71)
+  DEVICE_TITLE := COMFAST CF-EW72
+  DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-ath10k-ct ath10k-firmware-qca9888-ct \
+	-swconfig -uboot-envtools
+  BOARDNAME := CF-EW72
+endef
+TARGET_DEVICES += cf-ew72
+
 define Device/cpe505n
   DEVICE_TITLE := P&W CPE505N
   BOARDNAME := CPE505N

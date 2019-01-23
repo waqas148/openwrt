@@ -8,6 +8,8 @@
  *  - CF-E380AC v1/v2 (QCA9558)
  *  - CF-E385AC (QCA9558 + QCA9984 + QCA8337)
  *  - CF-E520N/CF-E530N (QCA9531)
+ *  - CF-EW71 (QCA9531)
+ *  - CF-EW72 (QCA9531 + QCA9886)
  *
  *  Copyright (C) 2016 Piotr Dymacz <pepe2k@gmail.com>
  *  Copyright (C) 2016 Gareth Parker <gareth41@orcon.net.nz>
@@ -347,6 +349,52 @@ static struct gpio_led cf_e530n_leds_gpio[] __initdata = {
 		.active_low	= 1,
 	}
 };
+
+/* CF-EW71/CF-EW72 */
+#define CF_EW7X_GPIO_BTN_RESET		17
+#define CF_EW7X_GPIO_LED_WLAN		14
+#define CF_EW7X_GPIO_LED_WAN		11
+#define CF_EW7X_GPIO_LED_LAN		2
+
+#define CF_EW7X_GPIO_EXT_WDT		13
+
+#define CF_EW7X_GPIO_LED_EXT_LAN	0
+#define CF_EW7X_GPIO_LED_EXT_WAN	3
+#define CF_EW7X_GPIO_LED_EXT_WLAN	12
+#define CF_EW7X_GPIO_LED_EXT_SIGNAL	16
+
+static struct gpio_led cf_ew71_leds_gpio[] __initdata = {
+	{
+		.name			= "cf-ew71:blue:wan",
+		.gpio			= CF_EW7X_GPIO_LED_WAN,
+		.active_low		= 1,
+	}, {
+		.name			= "cf-ew71:blue:lan",
+		.gpio			= CF_EW7X_GPIO_LED_LAN,
+		.active_low		= 1,
+	}, {
+		.name			= "cf-ew71:blue:wlan",
+		.gpio			= CF_EW7X_GPIO_LED_WLAN,
+		.active_low		= 1,
+	}
+};
+
+static struct gpio_led cf_ew72_leds_gpio[] __initdata = {
+	{
+		.name			= "cf-ew72:blue:wan",
+		.gpio			= CF_EW7X_GPIO_LED_WAN,
+		.active_low		= 1,
+	}, {
+		.name			= "cf-ew72:blue:lan",
+		.gpio			= CF_EW7X_GPIO_LED_LAN,
+		.active_low		= 1,
+	}, {
+		.name			= "cf-ew72:blue:wlan",
+		.gpio			= CF_EW7X_GPIO_LED_WLAN,
+		.active_low		= 1,
+	}
+};
+
 
 /*
  * Some COMFAST devices include external hardware watchdog chip,
@@ -763,3 +811,57 @@ static void __init cf_e530n_setup(void)
 
 MIPS_MACHINE(ATH79_MACH_CF_E530N, "CF-E530N", "COMFAST CF-E530N",
 	     cf_e530n_setup);
+
+static void __init cf_ew7x_gpio_setup(void)
+{
+	gpio_request_one(CF_EW7X_GPIO_LED_EXT_LAN,
+				GPIOF_OUT_INIT_HIGH | GPIOF_EXPORT_DIR_FIXED,
+				"EXT_LAN");
+	gpio_request_one(CF_EW7X_GPIO_LED_EXT_WAN,
+				GPIOF_OUT_INIT_HIGH | GPIOF_EXPORT_DIR_FIXED,
+				"EXT_WAN");
+	gpio_request_one(CF_EW7X_GPIO_LED_EXT_WLAN,
+				GPIOF_OUT_INIT_HIGH | GPIOF_EXPORT_DIR_FIXED,
+				"EXT_WLAN");
+	gpio_request_one(CF_EW7X_GPIO_LED_EXT_SIGNAL,
+				GPIOF_OUT_INIT_HIGH | GPIOF_EXPORT_DIR_FIXED,
+				"EXT_SIGNAL");
+
+	ath79_register_gpio_keys_polled(-1, CF_EXXXN_KEYS_POLL_INTERVAL,
+					ARRAY_SIZE(cf_e320n_v2_gpio_keys),
+					cf_e320n_v2_gpio_keys);
+}
+
+static void __init cf_ew71_setup(void)
+{
+	cf_exxxn_common_setup(0x10000, CF_EW7X_GPIO_EXT_WDT);
+
+	cf_exxxn_qca953x_eth_setup();
+
+	cf_ew7x_gpio_setup();
+
+	ath79_register_leds_gpio(-1, ARRAY_SIZE(cf_ew71_leds_gpio),
+				 cf_ew71_leds_gpio);
+}
+
+MIPS_MACHINE(ATH79_MACH_CF_EW71, "CF-EW71", "COMFAST CF-EW71",
+	     cf_ew71_setup);
+
+static void __init cf_ew72_setup(void)
+{
+	u8 *art = (u8 *) KSEG1ADDR(0x1f010000);
+
+	cf_exxxn_common_setup(0x10000, CF_EW7X_GPIO_EXT_WDT);
+
+	cf_exxxn_qca953x_eth_setup();
+
+	cf_ew7x_gpio_setup();
+
+	ath79_register_leds_gpio(-1, ARRAY_SIZE(cf_ew72_leds_gpio),
+				 cf_ew72_leds_gpio);
+
+	ap91_pci_init(art + 0x5000, NULL);
+}
+
+MIPS_MACHINE(ATH79_MACH_CF_EW72, "CF-EW72", "COMFAST CF-EW72",
+	     cf_ew72_setup);

@@ -578,6 +578,12 @@ ar71xx_board_detect() {
 	*"CF-E530N")
 		name="cf-e530n"
 		;;
+	*"CF-EW71")
+		name="cf-ew71"
+		;;
+	*"CF-EW72")
+		name="cf-ew72"
+		;;
 	*"CPE210/220")
 		name="cpe210"
 		tplink_pharos_board_detect "$(tplink_pharos_get_model_string | tr -d '\r')"
